@@ -23,10 +23,11 @@
           <div id="white-timer">White: 10:00</div>
           <div id="black-timer">Black: 10:00</div>
         </div>
-        <button id="start-btn">Start New Game</button>
+        <button id="fullscreen">Open Fullscreen</button>
+        <button id="start-btn">Start Game</button>
       </div>
     </div>
-    <div id="room-settings">
+    <div class="container">
       <h3>Room Settings</h3>
       <label for="time-control">Time Control (minutes):</label>
       <input type="number" id="time-control" min="1" max="60" value="10" />
@@ -38,11 +39,17 @@
       </select>
       <button id="apply-settings">Apply Settings</button>
     </div>
-    <h3>Connection ID</h3>
-    <input type="text" id="peerId" placeholder="Enter Peer ID to connect..." />
-    <button id="connectPeer">Connect</button>
-    <h3>My Peer ID</h3>
-    <p id="myPeerId">Generating...</p>
+    <div class="container">
+      <h3>Connection ID</h3>
+      <input
+        type="text"
+        id="peerId"
+        placeholder="Enter Peer ID to connect..."
+      />
+      <button id="connectPeer">Connect</button>
+      <h3>My Peer ID</h3>
+      <p id="myPeerId">Generating...</p>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chessboard-js/1.0.0/chessboard-1.0.0.min.js"></script>
