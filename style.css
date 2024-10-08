@@ -28,6 +28,7 @@ body {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
+  touch-action: none;
 }
 
 #game-info {
@@ -84,7 +85,7 @@ select {
   word-break: break-all;
 }
 
-#room-settings {
+.container {
   margin-top: 20px;
   padding: 20px;
   background-color: #f9f9f9;
