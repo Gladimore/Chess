@@ -3,6 +3,7 @@ const connectPeerButton = document.getElementById("connectPeer");
 const myPeerIdDisplay = document.getElementById("myPeerId");
 const startGameButton = document.getElementById("start-btn");
 const applySettingsButton = document.getElementById("apply-settings");
+const chessBoard = document.getElementById("board");
 const timeControlInput = document.getElementById("time-control");
 const colorChoiceSelect = document.getElementById("color-choice");
 const whiteTimerDisplay = document.getElementById("white-timer");
@@ -18,6 +19,11 @@ let gameStarted = false;
 let whiteTimer, blackTimer;
 let timeControl = 10 * 60; // 10 minutes in seconds
 let main_timer = null;
+let board = null;
+let game = new Chess();
+let $status = $("#status");
+
+makeChessboard()
 
 peer.on("open", (id) => {
     myPeerIdDisplay.innerText = id;
@@ -77,6 +83,14 @@ connectPeerButton.onclick = () => {
     });
 };
 
+function onFullScreenChange(fullscreen) {
+    console.log(fullscreen)
+    if (fullscreen) {
+        console.log("Fulscreen")
+        chessBoard.style.width = "100vw"
+    }
+}
+
 function setupConnection(connection) {
     conn = connection;
     conn.on("data", (data) => {
@@ -106,19 +120,16 @@ function showError(text, title) {
     showAlert(title || "Error", text, "error");
 }
 
-let board = null;
-let game = new Chess();
-let $status = $("#status");
-
-function onDragStart(source, piece, position, orientation) {
+function onDragStart() {
     if (game.game_over() || !gameStarted) return false;
     if ((game.turn() === "w" && !isWhite) || (game.turn() === "b" && isWhite)) {
-        //black is being classified as white which isnocrrect
         return false;
     }
+    document.body.style.overflow = "hidden";
 }
 
 function onDrop(source, target) {
+    document.body.style.overflow = "auto";
     let move = game.move({
         from: source,
         to: target,
@@ -136,6 +147,7 @@ function onDrop(source, target) {
 }
 
 function onSnapEnd() {
+    document.body.style.overflow = "auto";
     board.position(game.fen());
 }
 
@@ -160,8 +172,7 @@ function updateStatus() {
     $status.html(status);
 }
 
-function initGame() {
-    game = new Chess();
+function makeChessboard() {
     let config = {
         draggable: true,
         position: "start",
@@ -173,12 +184,18 @@ function initGame() {
             "https://raw.githubusercontent.com/jbkunst/chessboardjs-themes/refs/heads/master/chesspieces/wikipedia/{piece}.png",
     };
     board = Chessboard("board", config);
+}
+
+function initGame() {
+    game = new Chess();
+    makeChessboard();
     updateStatus();
 }
 
 startGameButton.onclick = () => {
     if (isRoomOwner) {
         if (conn) {
+            startGameButton.innerText = "Start New Game"
             gameStarted = true;
             initGame();
             startTimers();
@@ -283,4 +300,8 @@ function formatTime(seconds) {
 function setTimers(visible = false) {
     whiteTimerDisplay.style.display = visible ? "block" : "none";
     blackTimerDisplay.style.display = visible ? "block" : "none";
+}
+
+function openInFull() {
+    fullscreen.enable();
 }
